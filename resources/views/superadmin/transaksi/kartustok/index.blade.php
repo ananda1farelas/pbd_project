@@ -87,11 +87,11 @@
                             <th>Tanggal</th>
                             <th>Nama Barang</th>
                             <th>Satuan</th>
+                            <th>ID Transaksi</th>
                             <th>Jenis Transaksi</th>
                             <th class="text-center">Masuk</th>
                             <th class="text-center">Keluar</th>
                             <th class="text-center">Stok</th>
-                            <th>ID Transaksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -104,6 +104,9 @@
                                 </a>
                             </td>
                             <td>{{ $item->nama_satuan }}</td>
+                            <td>
+                                <small class="text-muted">{{ $item->idtransaksi }}</small>
+                            </td>
                             <td>
                                 @if($item->jenis_transaksi == 'M')
                                     <span class="badge bg-success">
@@ -131,9 +134,6 @@
                             </td>
                             <td class="text-center">
                                 <span class="badge bg-primary">{{ $item->stock }}</span>
-                            </td>
-                            <td>
-                                <small class="text-muted">{{ $item->idtransaksi }}</small>
                             </td>
                         </tr>
                         @empty

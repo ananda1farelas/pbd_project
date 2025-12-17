@@ -4,7 +4,7 @@
 <div class="container mt-4">
     <h3>➕ Tambah Barang</h3>
 
-    <form action="{{ route('barang.store') }}" method="POST">
+    <form action="{{ route('superadmin.barang.store') }}" method="POST">
         @csrf
 
         <div class="mb-3">
@@ -46,7 +46,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">💾 Simpan</button>
-        <a href="{{ route('barang.index') }}" class="btn btn-secondary">↩️ Kembali</a>
+        <a href="{{ route('superadmin.barang.index') }}" class="btn btn-secondary">↩️ Kembali</a>
     </form>
 </div>
 @endsection

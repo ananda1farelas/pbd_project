@@ -64,7 +64,9 @@
                                 @if($pengadaan->status == 'A')
                                     <span class="badge bg-success">Approved</span>
                                 @elseif($pengadaan->status == 'P')
-                                    <span class="badge bg-warning">Pending</span>
+                                    <span class="badge bg-warning">Proses</span>
+                                @elseif($pengadaan->status == 'S')
+                                    <span class="badge bg-info">Selesai</span>
                                 @else
                                     <span class="badge bg-danger">Cancelled</span>
                                 @endif
@@ -72,7 +74,7 @@
                         </tr>
                         <tr>
                             <th>Aksi</th>
-                            <td>: 
+                            <td>:
                                 @if($pengadaan->status == 'A')
                                     <form action="{{ route('pengadaan.cancel', $pengadaan->idpengadaan) }}" 
                                           method="POST" 

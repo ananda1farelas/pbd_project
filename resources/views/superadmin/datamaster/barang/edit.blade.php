@@ -4,7 +4,7 @@
 <div class="container mt-4">
     <h3>✏️ Edit Barang</h3>
 
-    <form action="{{ route('barang.update', $barang->idbarang) }}" method="POST">
+    <form action="{{ route('superadmin.barang.update', $barang->idbarang) }}" method="POST">
         @csrf
         @method('PUT')
 
@@ -47,7 +47,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">🔄 Update</button>
-        <a href="{{ route('barang.index') }}" class="btn btn-secondary">↩️ Kembali</a>
+        <a href="{{ route('superadmin.barang.index') }}" class="btn btn-secondary">↩️ Kembali</a>
     </form>
 
 </div>

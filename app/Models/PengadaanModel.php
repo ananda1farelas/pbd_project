@@ -111,7 +111,7 @@ class PengadaanModel
     public static function updateStatus($id, $status)
     {
         // Validasi status yang diizinkan
-        $allowedStatus = ['P', 'A', 'C']; // P=Pending, A=Approved, C=Cancelled
+        $allowedStatus = ['P', 'A', 'C', 'S'];
         
         if (!in_array($status, $allowedStatus)) {
             throw new \Exception("Status tidak valid: {$status}");

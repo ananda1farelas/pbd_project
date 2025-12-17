@@ -57,18 +57,34 @@ class ReturModel
     }
 
     // 🔹 Ambil penerimaan yang bisa di-retur
+// Di ReturModel.php
+
     public static function getPenerimaanBisaRetur()
     {
-        return DB::select("
+        return \DB::select("
             SELECT 
                 p.idpenerimaan,
-                p.created_at,
+                p.created_at AS tanggal_penerimaan,
                 pg.idpengadaan,
-                v.nama_vendor
+                v.nama_vendor,
+                p.status
             FROM penerimaan p
             JOIN pengadaan pg ON p.idpengadaan = pg.idpengadaan
             JOIN vendor v ON pg.vendor_idvendor = v.idvendor
-            WHERE p.status IN ('C', 'P')
+            WHERE p.status = 'A'  -- Hanya tampilkan penerimaan yang sudah diterima
+            AND EXISTS (
+                -- Pastikan ada barang yang bisa diretur (belum diretur semua)
+                SELECT 1 
+                FROM detail_penerimaan dp
+                WHERE dp.idpenerimaan = p.idpenerimaan
+                AND dp.jumlah_terima > COALESCE(
+                    (SELECT SUM(dr.jumlah) 
+                    FROM detail_retur dr
+                    JOIN retur_barang r ON dr.idretur = r.idretur
+                    WHERE dr.iddetail_penerimaan = dp.iddetail_penerimaan),
+                    0
+                )
+            )
             ORDER BY p.created_at DESC
         ");
     }

@@ -58,7 +58,7 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label">Tanggal Retur</label>
-                            <input type="text" class="form-control" value="{{ date('d/m/Y') }}" readonly>
+                            <input type="text" class="form-control" value="{{ date('d/m/Y H:i') }}" readonly>
                             <small class="text-muted">Otomatis diambil dari sistem</small>
                         </div>
                     </div>

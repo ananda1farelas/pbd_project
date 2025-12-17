@@ -28,6 +28,9 @@
     @endif
 
     <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-box"></i> Data Penerimaan Barang</h5>
+        </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-striped table-hover">
@@ -38,37 +41,50 @@
                             <th>ID Pengadaan</th>
                             <th>Vendor</th>
                             <th>Diterima Oleh</th>
-                            <th>Status</th>
+                            <th>Status Penerimaan</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($penerimaan as $item)
                         <tr>
-                            <td>{{ $item->idpenerimaan }}</td>
+                            <td><strong>{{ $item->idpenerimaan }}</strong></td>
                             <td>{{ date('d/m/Y H:i', strtotime($item->tanggal_penerimaan)) }}</td>
-                            <td>{{ $item->idpengadaan }}</td>
+                            <td>
+                                <span class="badge bg-secondary">{{ $item->idpengadaan }}</span>
+                            </td>
                             <td>{{ $item->nama_vendor }}</td>
                             <td>{{ $item->diterima_oleh }}</td>
                             <td>
-                                @if($item->status == 'C')
-                                    <span class="badge bg-success">selesai</span>
-                                @elseif($item->status == 'P')
-                                    <span class="badge bg-warning">sebagian</span>
+                                @if($item->status == 'L')
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check-circle"></i> Lengkap
+                                    </span>
+                                @elseif($item->status == 'S')
+                                    <span class="badge bg-warning">
+                                        <i class="fas fa-clock"></i> Sebagian
+                                    </span>
+                                @elseif($item->status == 'B')
+                                    <span class="badge bg-secondary">
+                                        <i class="fas fa-file"></i> Belum Diterima
+                                    </span>
                                 @else
-                                    <span class="badge bg-secondary">{{ $item->status }}</span>
+                                    <span class="badge bg-dark">{{ $item->status }}</span>
                                 @endif
                             </td>
                             <td>
                                 <a href="{{ route('penerimaan.show', $item->idpenerimaan) }}" 
-                                   class="btn btn-sm btn-info">
+                                   class="btn btn-sm btn-info" title="Lihat Detail">
                                     <i class="fas fa-eye"></i> Detail
                                 </a>
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="7" class="text-center">Belum ada data penerimaan</td>
+                            <td colspan="7" class="text-center text-muted py-4">
+                                <i class="fas fa-inbox fa-3x mb-3"></i>
+                                <p>Belum ada data penerimaan</p>
+                            </td>
                         </tr>
                         @endforelse
                     </tbody>

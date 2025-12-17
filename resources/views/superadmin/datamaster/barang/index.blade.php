@@ -16,18 +16,18 @@
 
         {{-- Filter --}}
         <div>
-            <a href="{{ route('barang.index', ['filter' => 'aktif']) }}" 
+            <a href="{{ route('superadmin.barang.index', ['filter' => 'aktif']) }}" 
                 class="btn {{ $filter == 'aktif' ? 'btn-primary' : 'btn-outline-primary' }}">
                 Barang Aktif
             </a>
-            <a href="{{ route('barang.index', ['filter' => 'semua']) }}" 
+            <a href="{{ route('superadmin.barang.index', ['filter' => 'semua']) }}" 
                 class="btn {{ $filter == 'semua' ? 'btn-primary' : 'btn-outline-primary' }}">
                 Semua Barang
             </a>
         </div>
 
         {{-- 🔍 FORM PENCARIAN (INI BAGIAN YANG ROSAK SEBELUMNYA) --}}
-        <form action="{{ route('barang.index') }}" method="GET" class="d-flex gap-2">
+        <form action="{{ route('superadmin.barang.index') }}" method="GET" class="d-flex gap-2">
 
             {{-- kirim filter supaya searching tidak hilangkan status aktif/semua --}}
             <input type="hidden" name="filter" value="{{ $filter }}">
@@ -39,7 +39,7 @@
             <button class="btn btn-primary">Cari</button>
         </form>
 
-        <a href="{{ route('barang.create') }}" class="btn btn-success">➕ Tambah Barang</a>
+        <a href="{{ route('superadmin.barang.create') }}" class="btn btn-success">➕ Tambah Barang</a>
     </div>
 
     {{-- Tabel Barang --}}
@@ -70,8 +70,8 @@
                     <td>Rp {{ number_format($b->harga_satuan, 0, ',', '.') }}</td>
 
                     <td>
-                        <a href="{{ route('barang.edit', $b->idbarang) }}" class="btn btn-warning btn-sm">✏️ Edit</a>
-                        <a href="{{ route('barang.delete', $b->idbarang) }}" 
+                        <a href="{{ route('superadmin.barang.edit', $b->idbarang) }}" class="btn btn-warning btn-sm">✏️ Edit</a>
+                        <a href="{{ route('superadmin.barang.delete', $b->idbarang) }}" 
                            class="btn btn-danger btn-sm"
                            onclick="return confirm('Yakin mau hapus barang ini?')">
                            🗑️ Hapus

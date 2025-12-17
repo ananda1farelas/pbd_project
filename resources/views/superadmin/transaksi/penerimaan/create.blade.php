@@ -49,10 +49,13 @@
                                         {{ $pg->idpengadaan }} - {{ $pg->nama_vendor }} 
                                         ({{ date('d/m/Y', strtotime($pg->timestamp)) }}) 
                                         - Rp {{ number_format($pg->total_nilai, 0, ',', '.') }}
+                                        @if(isset($pg->status_label))
+                                            - [{{ $pg->status_label }}]
+                                        @endif
                                     </option>
                                 @endforeach
                             </select>
-                            <small class="text-muted">Pilih pengadaan yang akan diterima barangnya</small>
+                            <small class="text-muted">Pilih pengadaan yang akan diterima barangnya (Status: Approved/Proses)</small>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -73,7 +76,12 @@
             <div class="card-body">
                 <div class="alert alert-info">
                     <i class="fas fa-info-circle"></i> 
-                    Masukkan jumlah barang yang diterima. Kosongkan atau isi 0 jika barang tidak diterima.
+                    <strong>Catatan:</strong> 
+                    <ul class="mb-0 mt-2">
+                        <li>Isi jumlah barang yang diterima untuk setiap item</li>
+                        <li>Kosongkan atau isi <strong>0</strong> jika barang tidak diterima saat ini</li>
+                        <li>Penerimaan dengan jumlah 0 akan dicatat sebagai dokumentasi</li>
+                    </ul>
                 </div>
                 
                 <div class="table-responsive">
@@ -85,7 +93,7 @@
                                 <th class="text-center">Jumlah Pesan</th>
                                 <th class="text-center">Sudah Diterima</th>
                                 <th class="text-center">Sisa Belum Terima</th>
-                                <th class="text-center">Terima Sekarang</th>
+                                <th class="text-center" width="200">Terima Sekarang</th>
                             </tr>
                         </thead>
                         <tbody id="barangContainer">
@@ -136,6 +144,15 @@ $('#selectPengadaan').change(function() {
                 let index = 0;
                 
                 response.data.forEach(function(item) {
+                    // Tentukan badge color berdasarkan sisa
+                    let badgeClass = 'bg-success';
+                    if (item.sisa_belum_terima > 0) {
+                        badgeClass = 'bg-warning';
+                    }
+                    if (item.sisa_belum_terima == item.jumlah_pesan) {
+                        badgeClass = 'bg-danger';
+                    }
+                    
                     html += `
                         <tr>
                             <td>
@@ -144,9 +161,11 @@ $('#selectPengadaan').change(function() {
                             </td>
                             <td>${item.nama_satuan}</td>
                             <td class="text-center"><strong>${item.jumlah_pesan}</strong></td>
-                            <td class="text-center">${item.total_diterima}</td>
                             <td class="text-center">
-                                <span class="badge bg-warning">${item.sisa_belum_terima}</span>
+                                <span class="badge bg-info">${item.total_diterima}</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge ${badgeClass}">${item.sisa_belum_terima}</span>
                             </td>
                             <td>
                                 <input type="number" 
@@ -154,8 +173,8 @@ $('#selectPengadaan').change(function() {
                                        class="form-control text-center" 
                                        min="0" 
                                        max="${item.sisa_belum_terima}"
-                                       placeholder="0"
-                                       required>
+                                       value="0"
+                                       placeholder="0">
                                 <small class="text-muted">Max: ${item.sisa_belum_terima}</small>
                             </td>
                         </tr>
@@ -166,34 +185,33 @@ $('#selectPengadaan').change(function() {
                 $('#barangContainer').html(html);
                 $('#btnSubmitContainer').show();
             } else {
-                $('#barangContainer').html('<tr><td colspan="6" class="text-center text-warning">Semua barang sudah diterima lengkap</td></tr>');
+                $('#barangContainer').html('<tr><td colspan="6" class="text-center text-muted"><i class="fas fa-check-circle"></i> Tidak ada data barang untuk pengadaan ini</td></tr>');
                 $('#btnSubmitContainer').hide();
             }
         },
         error: function(xhr) {
-            $('#barangContainer').html('<tr><td colspan="6" class="text-center text-danger">Gagal memuat data barang</td></tr>');
+            $('#barangContainer').html('<tr><td colspan="6" class="text-center text-danger"><i class="fas fa-exclamation-triangle"></i> Gagal memuat data barang</td></tr>');
             $('#btnSubmitContainer').hide();
             alert('Error: ' + (xhr.responseJSON?.message || 'Gagal memuat data'));
         }
     });
 });
 
-// Validasi sebelum submit
+// Validasi sebelum submit - DIHAPUS karena boleh terima 0 barang
 $('#formPenerimaan').submit(function(e) {
-    let adaBarang = false;
+    // Konfirmasi saja
+    const totalBarang = $('input[name*="jumlah_terima"]').length;
+    let totalTerima = 0;
     
     $('input[name*="jumlah_terima"]').each(function() {
-        if ($(this).val() > 0) {
-            adaBarang = true;
-            return false;
-        }
+        totalTerima += parseInt($(this).val() || 0);
     });
     
-    if (!adaBarang) {
-        e.preventDefault();
-        alert('Minimal harus ada 1 barang yang diterima!');
-        return false;
+    if (totalTerima === 0) {
+        return confirm('Anda akan mencatat penerimaan dengan jumlah 0 barang. Ini akan tercatat sebagai dokumentasi saja. Lanjutkan?');
     }
+    
+    return true;
 });
 </script>
 @endsection

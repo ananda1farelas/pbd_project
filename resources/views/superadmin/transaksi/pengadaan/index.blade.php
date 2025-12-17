@@ -39,6 +39,7 @@
                     <select name="status" class="form-select">
                         <option value="">Semua Status</option>
                         <option value="A" {{ $status == 'A' ? 'selected' : '' }}>Approved</option>
+                        <option value="P" {{ $status == 'P' ? 'selected' : '' }}>Proses</option>   
                         <option value="S" {{ $status == 'S' ? 'selected' : '' }}>Selesai</option>
                         <option value="C" {{ $status == 'C' ? 'selected' : '' }}>Cancelled</option>
                     </select>
@@ -106,7 +107,7 @@
                                     </span>
                                 @else
                                     <span class="badge bg-warning">
-                                        <i class="fas fa-clock"></i> Pending
+                                        <i class="fas fa-clock"></i> Proses
                                     </span>
                                 @endif
                             </td>
